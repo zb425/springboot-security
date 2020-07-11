@@ -6,6 +6,7 @@ import com.bgamq.springboot.handler.MySuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,9 +30,9 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login") //登录表单form中的action地址
                 .usernameParameter("username") //默认是username
                 .passwordParameter("password") //默认是password
-//                .successHandler(successHandler)
+                .successHandler(successHandler)
 //                .failureHandler(failureHandler)
-                .defaultSuccessUrl("/index")  //登录成功跳转到接口
+                //.defaultSuccessUrl("/index")  //登录成功跳转到接口
                 .failureUrl("/login.html") //登录失败跳转页面
              .and()  //and连接
              .authorizeRequests()  //配置权限
@@ -65,5 +66,11 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return  new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //放行以下的静态资源
+        web.ignoring().mvcMatchers("/css/**","/js/**","/images/**","/font/**");
     }
 }
